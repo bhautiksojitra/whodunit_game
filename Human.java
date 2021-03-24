@@ -58,8 +58,9 @@ public class Human implements IPlayer {
         Scanner scan = new Scanner(System.in);
 
         Card card1 =  getGuessedCard(people , "Person" , scan);
-        Card card2 =  getGuessedCard(weapons , "Weapon" , scan);
-        Card card3 =  getGuessedCard(location , "location" , scan);
+        Card card2 =  getGuessedCard(location , "location" , scan);
+        Card card3 =  getGuessedCard(weapons , "Weapon" , scan);
+
 
         boolean checkCondition = true;
         boolean isAccusation = false;
