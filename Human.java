@@ -5,12 +5,14 @@ public class Human implements IPlayer {
     private int totalPlayers;
     private int index;
     private ArrayList<Card> myCards;
-    private ArrayList<Card> remainingCards;
-    private ArrayList<Card> guessedCards;
+
 
     private ArrayList<Card> people;
     private ArrayList<Card> location;
     private ArrayList<Card> weapons;
+
+    public Human() {}
+
 
 
     public void setUp( int numPlayers, int index, ArrayList<Card> ppl,
@@ -18,12 +20,8 @@ public class Human implements IPlayer {
     {
         totalPlayers = numPlayers;
         this.index   = index;
-        myCards = new ArrayList<Card>();
-        remainingCards =  new ArrayList<Card>();
+        myCards = new ArrayList<>();
 
-        remainingCards.addAll(ppl);
-        remainingCards.addAll(places);
-        remainingCards.addAll(weapons);
 
         people = ppl;
         location = places;
@@ -35,7 +33,7 @@ public class Human implements IPlayer {
     public void setCard (Card c)
     {
         myCards.add(c);
-        remainingCards.remove(c);
+        System.out.println( "you received the card : "+ c.getValue() );
     }
     public int getIndex()
     {
@@ -44,22 +42,48 @@ public class Human implements IPlayer {
 
     public Card canAnswer(Guess g, IPlayer ip)
     {
-        for(int i = 0 ; i < myCards.size() ; i++)
-        {
-            if(g.getCards().contains(myCards.get(i)))
-            {
-                return myCards.get(i);
+        ArrayList<Card> commonCards = new ArrayList<>();
+
+        for (int i = 0; i < myCards.size(); i++) {
+            Card myCard = myCards.get(i);
+            if (g.getCards().contains(myCard)) {
+                commonCards.add(myCard);
             }
         }
-        return null;
+        if(commonCards.isEmpty()) {
+            System.out.println("Player " + ip.getIndex() + " asked you about [ " + g.toString() + " ] , but you couldn't answer.");
+            return null;
+        }
+        else if(commonCards.size() == 1)
+        {
+            System.out.println( "Player " +  ip.getIndex() + " asked you about [ " + g.toString() + " ] you only have one card, " +
+                                commonCards.get(0).getValue() + " showed it to them. ");
+            return commonCards.get(0);
+        }
+        else
+        {
+            System.out.println( "Player " +  ip.getIndex() + " asked you about [ " + g.toString() +
+                                " ] you only have multiple cards , which one do you show ?");
+            printList(commonCards);
+            Scanner scan = new Scanner(System.in);
+            int input = scan.nextInt();
+            while(input >= commonCards.size() || input < 0)
+            {
+                System.out.println("Invalid Input ! ");
+                input = scan.nextInt();
+            }
+            return commonCards.get(input);
+        }
     }
     public Guess getGuess()
     {
+        System.out.println("It's your turn ! ");
+
         Scanner scan = new Scanner(System.in);
 
-        Card card1 =  getGuessedCard(people , "Person" , scan);
-        Card card2 =  getGuessedCard(location , "location" , scan);
-        Card card3 =  getGuessedCard(weapons , "Weapon" , scan);
+        Card card1 =  getGuessedCard(people , people.get(0).getType(), scan);
+        Card card2 =  getGuessedCard(location , location.get(0).getType(), scan);
+        Card card3 =  getGuessedCard(weapons , weapons.get(0).getType() , scan);
 
 
         boolean checkCondition = true;
@@ -86,7 +110,16 @@ public class Human implements IPlayer {
             }
         }
 
-        return new Guess(card1 , card2 , card3 , isAccusation);
+        Guess guess = new Guess(card1 , card2 , card3 , isAccusation);
+        if(isAccusation)
+        {
+            System.out.println("Accusation : " + guess.toString());
+        }
+        else
+        {
+            System.out.println("Suggestion : " + guess.toString());
+        }
+        return guess;
 
     }
 
@@ -120,10 +153,14 @@ public class Human implements IPlayer {
     }
     public void receiveInfo(IPlayer ip, Card c)
     {
-        if(c != null & ip != null)
+        if(ip != null && c != null)
         {
-            guessedCards.add(c);
-            remainingCards.remove(c);
+            System.out.println("Player " + ip.getIndex() + " refuted your suggestion by showing you card " + c.getValue());
         }
+        else
+        {
+            System.out.println("No one could refute your suggestion.");
+        }
+
     }
 }

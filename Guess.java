@@ -21,4 +21,15 @@ public class Guess {
         return cards;
     }
 
+    public String toString()
+    {
+        return cards.get(0).getValue() + " in " + cards.get(1).getValue() + " with the " + cards.get(2).getValue();
+    }
+
+    public boolean checkAccusation()
+    {
+        return isAccusation;
+    }
+
+
 }
