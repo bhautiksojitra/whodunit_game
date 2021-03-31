@@ -71,11 +71,6 @@ public class TheModel {
 
     public void gamePlay()
     {
-       /* printPlayers(players);
-        players.remove(players.get(0));
-        printPlayers(players);
-       */
-
         ArrayList<IPlayer> tempPlayers = new ArrayList<>();
         tempPlayers.addAll(players);
         while(players.size() != 1)
@@ -86,15 +81,22 @@ public class TheModel {
             {
                 if(guess.getCards().containsAll(result))
                 {
-                    System.out.println("Player : " + currentPlayer.getIndex() + "Won the Game.");
+                    System.out.println("Game is Won : Player : " + currentPlayer.getIndex() + " Won the Game.");
+                    System.out.println("The answer is : ");
+                    print(result);
                     return;
                 }
                 else
                 {
                     players.remove(currentPlayer);
+
+                    System.out.println("Player : " + currentPlayer.getIndex() + " made a bad accusation and was removed from the game ");
                     currIndex--;
+
                     if(players.size() == 1) {
-                        System.out.println("Player : " + players.get(0).getIndex() + " Won the Game.");
+                        System.out.println("Game is Won : Player : " + players.get(0).getIndex() + " Won the Game.");
+                        System.out.println("The answer is : ");
+                        print(result);
                         return;
                     }
 
@@ -107,20 +109,20 @@ public class TheModel {
                 while(theCard == null && nextPlayer.getIndex() != currentPlayer.getIndex())
                 {
                     System.out.println("Asking Player : " + nextPlayer.getIndex());
-                    theCard = nextPlayer.canAnswer(guess , currentPlayer);
-                    if(theCard == null )
-                        nextPlayer = tempPlayers.get((nextPlayer.getIndex() + 1) % tempPlayers.size());
-                }
 
-                if(theCard != null)
-                {
-                    currentPlayer.receiveInfo(nextPlayer , theCard);
+                    theCard = nextPlayer.canAnswer(guess , currentPlayer);
+
+                    if(theCard == null )
+                    {
+                        System.out.println("Player : " + nextPlayer.getIndex() + " could not answer !");
+                        nextPlayer = tempPlayers.get((nextPlayer.getIndex() + 1) % tempPlayers.size());
+                    }
+                    else
+                        System.out.println("Player : " + nextPlayer.getIndex() + " answered !");
                 }
-                else
-                {
-                    System.out.println("No one could answer the suggestion.");
-                }
+                currentPlayer.receiveInfo(nextPlayer, theCard);
             }
+
             if(players.size() !=1)
                 nextTurn();
         }
@@ -130,10 +132,9 @@ public class TheModel {
 
     private void nextTurn()
     {
+        System.out.println("Current Turn : Player " + currentPlayer.getIndex());
         currIndex = (currIndex + 1) % players.size();
         currentPlayer = players.get(currIndex);
-
-
     }
 
 
@@ -145,15 +146,5 @@ public class TheModel {
             System.out.print(" " + source.get(i).getValue() + " ,");
         System.out.println(source.get(i).getValue() + " ]");
     }
-
-    private void printPlayers(ArrayList<IPlayer> source)
-    {
-        int i = 0;
-        System.out.print(" [ ");
-        for( i = 0 ; i < source.size() - 1 ; i++)
-            System.out.print(" " + source.get(i).getIndex() + " ,");
-        System.out.println(source.get(i).getIndex() + " ]");
-    }
-
 
 }

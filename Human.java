@@ -63,14 +63,20 @@ public class Human implements IPlayer {
         else
         {
             System.out.println( "Player " +  ip.getIndex() + " asked you about [ " + g.toString() +
-                                " ] you only have multiple cards , which one do you show ?");
+                                " ] you have multiple cards , which one do you show ?");
             printList(commonCards);
             Scanner scan = new Scanner(System.in);
-            int input = scan.nextInt();
+            int input = -1;
             while(input >= commonCards.size() || input < 0)
             {
-                System.out.println("Invalid Input ! ");
-                input = scan.nextInt();
+                try
+                {
+                    input = Integer.parseInt(scan.nextLine());
+                }
+                catch(NumberFormatException ne)
+                {
+                    System.out.println("Enter valid Integer Value  ! ");
+                }
             }
             return commonCards.get(input);
         }
@@ -86,27 +92,20 @@ public class Human implements IPlayer {
         Card card3 =  getGuessedCard(weapons , weapons.get(0).getType() , scan);
 
 
-        boolean checkCondition = true;
+        char index = ' ';
         boolean isAccusation = false;
-        while(checkCondition)
+        while(index != 'y' && index != 'n' && index != 'Y' && index != 'N')
         {
-            System.out.println("Is this Accusation : ");
-            System.out.println("1 . YES ");
-            System.out.println("2 .  NO ");
+            System.out.println("Is this an accusation (Y/[N])?");
 
-            int index = scan.nextInt();
-            if(index == 1)
+            index = scan.next().charAt(0);
+            if(index == 'y' || index == 'Y')
             {
                 isAccusation = true;
-                checkCondition = false;
             }
-            else if(index == 2)
+            else if(index != 'n' && index != 'N')
             {
-                checkCondition = false;
-            }
-            else
-            {
-                System.out.println("FAIL ! Enter valid Input ");
+                System.out.println("FAIL ! Enter valid Input : Y , N ");
             }
         }
 
@@ -126,11 +125,15 @@ public class Human implements IPlayer {
     private Card getGuessedCard(ArrayList<Card> source , String type , Scanner scan)
     {
 
-        while(true)
+        int index = -1;
+        while(index < 0 || index >= source.size())
         {
             System.out.println("Which "+ type + "  do you want to suggest : ");
             printList(source);
-            int index = scan.nextInt();
+            try {
+                index = Integer.parseInt(scan.nextLine());
+            }catch(NumberFormatException e)
+            {}
 
             if (index >= 0 && index < source.size()) {
                 return source.get(index);
@@ -140,7 +143,7 @@ public class Human implements IPlayer {
                 System.out.println("FAIL ! Enter valid Input ");
             }
         }
-
+        return null;
     }
 
     private void printList(ArrayList<Card> source)

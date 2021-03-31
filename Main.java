@@ -22,7 +22,14 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         System.out.println("New Game Starts...");
         System.out.println("How many players you want to play with  : ");
-        int compPlayers = scan.nextInt();
+        int compPlayers = -1;
+        while(compPlayers < 1) {
+            try {
+                compPlayers = Integer.parseInt(scan.nextLine());
+            } catch (NumberFormatException ne) {
+                System.out.println("Enter a valid Integer Value !");
+            }
+        }
         IPlayer newPlayer = new Human();
         players.add(newPlayer);
 
