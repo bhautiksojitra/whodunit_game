@@ -1,20 +1,30 @@
+/*----------------------------------------------------------------
+    Name       : Bhautik Sojitra
+    Student No : 7900140
+    File       : Human.java
+    Course     : COMP 2150
+    Assignment : 3
+
+    Purpose    : Holds the info related to the human player
+ -----------------------------------------------------------------*/
 import java.util.*;
 
 public class Human implements IPlayer {
 
-    private int totalPlayers;
-    private int index;
-    private ArrayList<Card> myCards;
+    private int totalPlayers; // total players in the game
+    private int index; // index of the human player
+    private ArrayList<Card> myCards; // player's card
 
-
+    // poniters to all the cards
     private ArrayList<Card> people;
     private ArrayList<Card> location;
     private ArrayList<Card> weapons;
 
+    //constructor - not helpful
     public Human() {}
 
 
-
+    //Initialise all the fields
     public void setUp( int numPlayers, int index, ArrayList<Card> ppl,
                        ArrayList<Card> places, ArrayList<Card> weapons)
     {
@@ -29,27 +39,33 @@ public class Human implements IPlayer {
 
     }
 
-
+    // assigning the card to the player - prompt to the user
     public void setCard (Card c)
     {
         myCards.add(c);
         System.out.println( "you received the card : "+ c.getValue() );
     }
+
+    //returns the index
     public int getIndex()
     {
         return index;
     }
 
+    // chceks if he can answer the question of another players guess
     public Card canAnswer(Guess g, IPlayer ip)
     {
-        ArrayList<Card> commonCards = new ArrayList<>();
+        ArrayList<Card> commonCards = new ArrayList<>(); // temp list
 
-        for (int i = 0; i < myCards.size(); i++) {
+        // add all the common cards from the guess and myCard list
+        for(int i = 0; i < myCards.size(); i++) {
             Card myCard = myCards.get(i);
             if (g.getCards().contains(myCard)) {
                 commonCards.add(myCard);
             }
         }
+
+        // Output Based on the number of cards th player has to answer from the guess
         if(commonCards.isEmpty()) {
             System.out.println("Player " + ip.getIndex() + " asked you about [ " + g.toString() + " ] , but you couldn't answer.");
             return null;
@@ -65,9 +81,11 @@ public class Human implements IPlayer {
             System.out.println( "Player " +  ip.getIndex() + " asked you about [ " + g.toString() +
                                 " ] you have multiple cards , which one do you show ?");
             printList(commonCards);
+
+            // In case of having multiple cards - asks for input from the user to choose one card to show.
             Scanner scan = new Scanner(System.in);
             int input = -1;
-            while(input >= commonCards.size() || input < 0)
+            while(input >= commonCards.size() || input < 0) // loops untill you enters the valid input
             {
                 try
                 {
@@ -76,22 +94,26 @@ public class Human implements IPlayer {
                 catch(NumberFormatException ne)
                 {
                     System.out.println("Enter valid Integer Value  ! ");
-                }
+                }// handles exceptions
             }
-            return commonCards.get(input);
+            return commonCards.get(input); // returns the card
         }
     }
+
+    // make the guess by making random choice - depends on the user (no smart work like computer).
     public Guess getGuess()
     {
+        //Everything is based on the user input
         System.out.println("It's your turn ! ");
 
         Scanner scan = new Scanner(System.in);
 
+        // selects the cards for the guess through user input
         Card card1 =  getGuessedCard(people , people.get(0).getType(), scan);
         Card card2 =  getGuessedCard(location , location.get(0).getType(), scan);
         Card card3 =  getGuessedCard(weapons , weapons.get(0).getType() , scan);
 
-
+        // asks if user want to make accusation or not.
         char index = ' ';
         boolean isAccusation = false;
         while(index != 'y' && index != 'n' && index != 'Y' && index != 'N')
@@ -122,18 +144,19 @@ public class Human implements IPlayer {
 
     }
 
+    // Helps to get the card for the user
     private Card getGuessedCard(ArrayList<Card> source , String type , Scanner scan)
     {
 
         int index = -1;
-        while(index < 0 || index >= source.size())
+        while(index < 0 || index >= source.size()) // loops until valid input
         {
             System.out.println("Which "+ type + "  do you want to suggest : ");
             printList(source);
             try {
                 index = Integer.parseInt(scan.nextLine());
             }catch(NumberFormatException e)
-            {}
+            {}//Handled exceptions
 
             if (index >= 0 && index < source.size()) {
                 return source.get(index);
@@ -146,6 +169,7 @@ public class Human implements IPlayer {
         return null;
     }
 
+    // Prints the entire list of cards - useful for prompts
     private void printList(ArrayList<Card> source)
     {
         int i = 0;
@@ -154,6 +178,8 @@ public class Human implements IPlayer {
             System.out.println( i++ + ". " + c.getValue() );
         }
     }
+
+    // Only showing some output to the user - (No smart work like computer)
     public void receiveInfo(IPlayer ip, Card c)
     {
         if(ip != null && c != null)
