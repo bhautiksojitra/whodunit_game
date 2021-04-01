@@ -79,6 +79,7 @@ public class TheModel {
 
             if(guess.checkAccusation())
             {
+                System.out.println("Player : " + currentPlayer.getIndex() + "  Accusation : " + guess.toString());
                 if(guess.getCards().containsAll(result))
                 {
                     System.out.println("Game is Won : Player : " + currentPlayer.getIndex() + " Won the Game.");
@@ -104,6 +105,7 @@ public class TheModel {
             }
             else
             {
+                System.out.println("Player : " + currentPlayer.getIndex() + "  Suggestion : " + guess.toString());
                 Card theCard = null;
                 nextPlayer = tempPlayers.get((currentPlayer.getIndex() + 1) % tempPlayers.size());
                 while(theCard == null && nextPlayer.getIndex() != currentPlayer.getIndex())

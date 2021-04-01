@@ -72,18 +72,15 @@ public class Computer implements IPlayer{
 
             if (remainingCards.size() > 3) {
                 Guess g = new Guess(card1, card2, card3, false);
-                System.out.println("Player : " + this.getIndex() + "  Suggestion : " + g.toString());
                 return g;
             } else {
                 Guess g = new Guess(card1, card2, card3, true);
-                System.out.println("Player : " + this.getIndex() + "  Accusation : " + g.toString());
                 return g;
             }
         }
         else
         {
             Guess g = new Guess(guessedCards.get(0), guessedCards.get(1), guessedCards.get(2), true);
-            System.out.println("Player : " + this.getIndex() + "  Accusation : " + g.toString());
             return g;
         }
     }
